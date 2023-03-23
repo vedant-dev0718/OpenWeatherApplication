@@ -30,7 +30,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="CITY CODE"
+                    android:text="Data Loading"
                     android:textColor="@color/colorOffWhite"
                     android:textSize="23sp" />
 
@@ -39,7 +39,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="CITY NAME"
+                    android:text="Data Loading"
                     android:textColor="@color/colorOffWhite"
                     android:textSize="17sp" />
 

@@ -40,7 +40,7 @@ class MainActivity : AppCompatActivity() {
     private var cnt: Int = 0
     private var latitude: String? = null
     private var longitude: String? = null
-    private val locationArray = ArrayList<String>()
+    private val locationArray = arrayListOf("London","Singapore","New York","Mumbai","Delhi","Sydney")
     private lateinit var adapter: Adapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,13 +54,6 @@ class MainActivity : AppCompatActivity() {
 
         viewmodel = ViewModelProvider(this)[MainViewModel::class.java]
         val currentLocation = getCurrentLocation()
-
-        locationArray.add("London")
-        locationArray.add("Singapore")
-        locationArray.add("New York")
-        locationArray.add("Mumbai")
-        locationArray.add("Delhi")
-        locationArray.add("Sydney")
         
         if (currentLocation != null) {
             for (element in currentLocation) {
@@ -88,7 +81,7 @@ class MainActivity : AppCompatActivity() {
             ll_data.visibility = View.GONE
             tv_error.visibility = View.GONE
             pb_loading.visibility = View.GONE
-
+            adapter.notifyDataSetChanged()
             val cityName = GET.getString("cityName", cName)?.toLowerCase(Locale.ROOT)
             edt_city_name.setText(cityName)
             viewmodel.refreshData(cityName!!)

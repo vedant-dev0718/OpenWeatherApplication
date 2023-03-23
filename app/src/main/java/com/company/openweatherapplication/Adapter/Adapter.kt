@@ -1,6 +1,7 @@
 package com.company.openweatherapplication.Adapter
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
@@ -10,7 +11,8 @@ import androidx.lifecycle.ViewModelStoreOwner
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.company.openweatherapplication.databinding.ViewholderBinding
-import com.company.openweatherapplication.viewmodel.MainViewModel
+import com.company.openweatherapplication.models.WeatherModel
+import com.company.openweatherapplication.viewmodel.AdapterViewModel
 
 
 class Adapter(
@@ -50,39 +52,45 @@ class Adapter(
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         tempList?.get(position)?.let { holder.bind(it, owner, owner2) }
+        Log.d("vedant",position.toString())
     }
 
     override fun getItemCount(): Int {
-        return if (tempList != null) {
-            tempList!!.size
-        } else 0
+       return tempList!!.size
     }
 
     inner class MyViewHolder(private val binding: ViewholderBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        private lateinit var viewmodel: MainViewModel
+        private lateinit var viewmodel: AdapterViewModel
 
         fun bind(item: String, owner: LifecycleOwner, owner2: ViewModelStoreOwner) {
-            viewmodel = ViewModelProvider(owner2)[MainViewModel::class.java]
-
+            viewmodel = ViewModelProvider(owner2)[AdapterViewModel::class.java]
             viewmodel.refreshData(item)
-            getLiveData(owner)
+            
+            val data = getLiveData(owner)
+            
+            if (data != null) {
+                binding.tvCityCode.text = data.main.temp.toString() + "°C"
+                binding.tvCityName.text = item
+
+                Glide.with(context)
+                    .load("https://openweathermap.org/img/wn/" + data.weather[0].icon + "@2x.png")
+                    .into(binding.imgWeatherPictures)
+            }
+            
+
         }
 
-        private fun getLiveData(owner: LifecycleOwner) {
+        private fun getLiveData(owner: LifecycleOwner): WeatherModel? {
+            var items: WeatherModel?=null
 
             viewmodel.weather_data.observe(owner, Observer { data ->
                 data?.let {
-
-                    binding.tvCityCode.text = data.main.temp.toString() + "°C"
-                    binding.tvCityName.text = data.name
-
-                    Glide.with(context)
-                        .load("https://openweathermap.org/img/wn/" + data.weather[0].icon + "@2x.png")
-                        .into(binding.imgWeatherPictures)
-
+                      items = it
                 }
             })
+            
+            return items
         }
 
     }
